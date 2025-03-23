@@ -1,7 +1,7 @@
 {
     "Metadata": {
         "AWSToolsMetrics": {
-            "IaC_Generator": "arn:aws:cloudformation:us-east-1:190623961705:generatedTemplate/1b4025f4-198f-484c-a87f-ba0638144aca"
+            "IaC_Generator": "arn:aws:cloudformation:us-east-1:190623961705:generatedTemplate/6a1e9631-d626-408e-8bd2-23e17261b872"
         }
     },
     "Resources": {
@@ -201,6 +201,54 @@
                     {
                         "KeyType": "RANGE",
                         "AttributeName": "date_time"
+                    }
+                ],
+                "DeletionProtectionEnabled": false,
+                "TableClass": "STANDARD",
+                "Tags": [],
+                "TimeToLiveSpecification": {
+                    "Enabled": false
+                }
+            }
+        },
+        "DynamoDBTable00medicalRecords001enq4": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::DynamoDB::Table",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "SSESpecification": {
+                    "SSEEnabled": false
+                },
+                "TableName": "medicalRecords",
+                "AttributeDefinitions": [
+                    {
+                        "AttributeType": "S",
+                        "AttributeName": "providerId"
+                    },
+                    {
+                        "AttributeType": "S",
+                        "AttributeName": "sortKey"
+                    }
+                ],
+                "ContributorInsightsSpecification": {
+                    "Enabled": false
+                },
+                "BillingMode": "PAY_PER_REQUEST",
+                "PointInTimeRecoverySpecification": {
+                    "PointInTimeRecoveryEnabled": false
+                },
+                "WarmThroughput": {
+                    "ReadUnitsPerSecond": 12000,
+                    "WriteUnitsPerSecond": 4000
+                },
+                "KeySchema": [
+                    {
+                        "KeyType": "HASH",
+                        "AttributeName": "providerId"
+                    },
+                    {
+                        "KeyType": "RANGE",
+                        "AttributeName": "sortKey"
                     }
                 ],
                 "DeletionProtectionEnabled": false,
