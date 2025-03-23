@@ -1,11 +1,11 @@
 {
     "Metadata": {
         "AWSToolsMetrics": {
-            "IaC_Generator": "arn:aws:cloudformation:us-east-1:190623961705:generatedTemplate/c0b1d516-8946-44d3-be43-be1ad5fa9d3b"
+            "IaC_Generator": "arn:aws:cloudformation:us-east-1:190623961705:generatedTemplate/1b4025f4-198f-484c-a87f-ba0638144aca"
         }
     },
     "Resources": {
-        "S3Bucket00devopschallengebparas002Wd2l": {
+        "S3Bucket00devopschallengebparaspatientrecords00uHNUx": {
             "UpdateReplacePolicy": "Retain",
             "Type": "AWS::S3::Bucket",
             "DeletionPolicy": "Delete",
@@ -16,7 +16,7 @@
                     "BlockPublicPolicy": true,
                     "BlockPublicAcls": true
                 },
-                "BucketName": "devops-challenge-bparas",
+                "BucketName": "devops-challenge-bparas-patient-records",
                 "OwnershipControls": {
                     "Rules": [
                         {
@@ -64,6 +64,68 @@
                         }
                     ],
                     "Id": "Policy1411630465004"
+                }
+            }
+        },
+        "S3BucketPolicy00devopschallengebparaspatientrecords00Jjvyb": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::S3::BucketPolicy",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "Bucket": {
+                    "Ref": "S3Bucket00devopschallengebparaspatientrecords00uHNUx"
+                },
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Condition": {
+                                "Bool": {
+                                    "aws:SecureTransport": "false"
+                                }
+                            },
+                            "Resource": [
+                                "arn:aws:s3:::devops-challenge-bparas-patient-records/*",
+                                "arn:aws:s3:::devops-challenge-bparas-patient-records"
+                            ],
+                            "Action": "s3:*",
+                            "Effect": "Deny",
+                            "Principal": "*",
+                            "Sid": "StmtDenySecureTransport"
+                        }
+                    ],
+                    "Id": "Policy1411630465004"
+                }
+            }
+        },
+        "S3Bucket00devopschallengebparas002Wd2l": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::S3::Bucket",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "PublicAccessBlockConfiguration": {
+                    "RestrictPublicBuckets": true,
+                    "IgnorePublicAcls": true,
+                    "BlockPublicPolicy": true,
+                    "BlockPublicAcls": true
+                },
+                "BucketName": "devops-challenge-bparas",
+                "OwnershipControls": {
+                    "Rules": [
+                        {
+                            "ObjectOwnership": "BucketOwnerEnforced"
+                        }
+                    ]
+                },
+                "BucketEncryption": {
+                    "ServerSideEncryptionConfiguration": [
+                        {
+                            "BucketKeyEnabled": true,
+                            "ServerSideEncryptionByDefault": {
+                                "SSEAlgorithm": "AES256"
+                            }
+                        }
+                    ]
                 }
             }
         },
