@@ -26,10 +26,10 @@ app = FastAPI()
 
 # Setup DynamoDB connection
 aws_region = os.getenv('AWS_REGION', 'us-east-1')
-table_name = os.getenv('DYNAMODB_TABLE_NAME', '')
+table_name = os.getenv('DYNAMODB_TABLE_NAME', 'medicalRecords')
 user_id = os.getenv('USER_ID', 'admin')
 password = os.getenv('PASSWORD', 'Admin1234')
-master_api_key = os.getenv('API_KEY', '')
+master_api_key = os.getenv('API_KEY', 'devops-challenge')
 
 endpoint_url = os.getenv('AWS_ENDPOINT_URL', None)
 logger.info(f"aws_region: {aws_region}, table_name: {table_name}")
@@ -43,9 +43,11 @@ config = Config(
 dynamodb = boto3.resource(
     'dynamodb',
     config=config,
-    endpoint_url=endpoint_url,
-    aws_access_key_id="test",
-    aws_secret_access_key="test"
+    endpoint_url=endpoint_url#,
+    # commenting out lines below from original code since grabbing creds
+    # from environment by default. prefer not to hard-code
+    # aws_access_key_id="test",
+    # aws_secret_access_key="test"
 )
 
 table = dynamodb.Table(table_name)
