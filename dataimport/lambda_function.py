@@ -72,10 +72,10 @@ def process_single_file(bucket, key, provider_id):
                     'providerId': provider_id,
                     'sortKey': sort_key,
                     'medicalRecordNumber': row['medical_record_number'],
-                    'first_name': row['first_name'],
-                    'last_name': row['last_name'],
-                    'date_time': row['date_time'],
-                    'doctors_notes': row['doctors_notes']
+                    'firstName': row['first_name'],
+                    'lastName': row['last_name'],
+                    'dateTime': row['date_time'],
+                    'doctorsNotes': row['doctors_notes']
                 }
                 
                 # Add to batch
@@ -94,10 +94,10 @@ def process_record(batch, row, provider_id):
                 'providerId': provider_id,
                 'sortKey': sort_key,
                 'medicalRecordNumber': row['medical_record_number'],
-                'first_name': row['first_name'],
-                'last_name': row['last_name'],
-                'date_time': row['date_time'],
-                'doctors_notes': row['doctors_notes']
+                'firstName': row['first_name'],
+                'lastName': row['last_name'],
+                'dateTime': row['date_time'],
+                'doctorsNotes': row['doctors_notes']
             },
             ConditionExpression='attribute_not_exists(sortKey)'
         )
