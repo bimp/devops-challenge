@@ -1,16 +1,13 @@
 import boto3
+import os
 
-# Initialize S3 client
-s3 = boto3.client('s3', region_name='us-east-1')
+s3 = boto3.client('s3')
 
-# Define bucket and key
 bucket_name = 'devops-challenge-bparas-patient-records'
-object_key = 'example.csv'
-local_filename = '/tmp/example.csv'
+object_key = 'hospital01/example.csv'
+local_file_name = '/tmp/hospital01/example.csv'
 
-try:
-    # Download the file
-    s3.download_file(bucket_name, object_key, local_filename)
-    print(f"Downloaded {object_key} to {local_filename}")
-except Exception as e:
-    print(f"Error downloading file: {e}")
+# Create the directory if it doesn't exist
+os.makedirs(os.path.dirname(local_file_name), exist_ok=True)
+
+s3.download_file(bucket_name, object_key, local_file_name)
