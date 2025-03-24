@@ -61,6 +61,8 @@ def process_single_file(bucket, key, provider_id):
                 sort_key = f"{row['medical_record_number']}#{row['date_time']}"
                 
                 # Skip existing records
+                # have to use a record_exists check since can not do 
+                # conditional writes in a batch write operation
                 if record_exists(provider_id, sort_key):
                     print(f"Skipping existing: {sort_key}")
                     continue
@@ -69,10 +71,11 @@ def process_single_file(bucket, key, provider_id):
                 item = {
                     'providerId': provider_id,
                     'sortKey': sort_key,
-                    'firstName': row['first_name'],
-                    'lastName': row['last_name'],
-                    'dateTime': row['date_time'],
-                    'doctorsNotes': row['doctors_notes']
+                    'medicalRecordNumber': row['medical_record_number'],
+                    'first_name': row['first_name'],
+                    'last_name': row['last_name'],
+                    'date_time': row['date_time'],
+                    'doctors_notes': row['doctors_notes']
                 }
                 
                 # Add to batch
@@ -90,6 +93,7 @@ def process_record(batch, row, provider_id):
             Item={
                 'providerId': provider_id,
                 'sortKey': sort_key,
+                'medicalRecordNumber': row['medical_record_number'],
                 'first_name': row['first_name'],
                 'last_name': row['last_name'],
                 'date_time': row['date_time'],
