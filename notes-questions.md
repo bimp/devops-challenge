@@ -27,6 +27,13 @@ the sort key which is still performant since it does not trigger a table scan.
 date_time for possible future use cases without having to parse the values 
 from the sort key.
 
+Packaging frontend and middletier for AWS deployment
+ - first figure out how to get the frontend running in AWS since by default it can run directly against a non-dynamodb table hitting https://jsonplaceholder.typicode.com/posts
+ - second once frontend working, package middletier alongside frontend
+ - see if you can get both running in one Fargate service so that both can talk to each other via http://localhost
+ - initial version of frontend Docker image takes too long to startup. need more time to figure out a more optimized image the can package all the dependencies 
+ locally
+
 
 ## Questions
 1. Should I treat the records in the dynamodb table as immutable? Should the 
