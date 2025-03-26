@@ -47,9 +47,9 @@
 
 | providerId | sortKey | dateTime | doctorsNotes | dateTimeProcessed | csvFile | firstName | lastName | medicalRecordNumber |
 |------------|---------|----------|--------------|-------------------|---------|-----------|----------|---------------------|
-| PROV001 | 2025-03-26#12345 | 2025-03-26T10:30:00-07:00 | Patient reports mild fever | 2025-03-26T11:15:00-07:00 | records_20250326.csv | John | Doe | MRN123456 |
-| PROV002 | 2025-03-26#67890 | 2025-03-26T14:45:00-07:00 | Follow-up on previous treatment | 2025-03-26T15:30:00-07:00 | records_20250326.csv | Jane | Smith | MRN789012 |
-| PROV003 | 2025-03-26#24680 | 2025-03-26T09:15:00-07:00 | Annual check-up, all clear | 2025-03-26T10:00:00-07:00 | records_20250326.csv | Bob | Johnson | MRN345678 |
+| PROV001 | MRN123456#2025-03-26T10:30:00-07:00 | 2025-03-26T10:30:00-07:00 | Patient reports mild fever | 2025-03-26T11:15:00-07:00 | records_20250326.csv | John | Doe | MRN123456 |
+| PROV002 | MRN789012#2025-03-26T14:45:00-07:00 | 2025-03-26T14:45:00-07:00 | Follow-up on previous treatment | 2025-03-26T15:30:00-07:00 | records_20250326.csv | Jane | Smith | MRN789012 |
+| PROV003 | MRN345678#2025-03-26T09:15:00-07:00 | 2025-03-26T09:15:00-07:00 | Annual check-up, all clear | 2025-03-26T10:00:00-07:00 | records_20250326.csv | Bob | Johnson | MRN345678 |
 
 
 
