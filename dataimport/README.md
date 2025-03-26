@@ -4,7 +4,7 @@
 ![s3-upload-lambda](devops-challenge-part1.drawio.svg)
 
 ## Notes and Improvements
- - At this point, have a ![Python script](./lambda_function.py) 
+ - At this point, have a [Python script](lambda_function.py) 
  running locally to populate dynamodb table.
  - multi-tenancy handled via a S3 prefix path and providerId field in DynamoDB 
  table
