@@ -8,6 +8,8 @@
  running locally to populate dynamodb table.
  - multi-tenancy handled via a S3 prefix path and providerId field in DynamoDB 
  table
+ - still need to add more record validation
+ - still need to deploy Lambda function and implement the S3 to Lambda trigger
 
 ---
  - In Steps 1 and 2, the application will know the providerId to help generate the initial s3 csv artifact file path
