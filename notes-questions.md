@@ -33,6 +33,10 @@ Packaging frontend and middletier for AWS deployment
  - see if you can get both running in one Fargate service so that both can talk to each other via http://localhost
  - initial version of frontend Docker image takes too long to startup. need more time to figure out a more optimized image the can package all the dependencies 
  locally
+ - currently deploying into the default vpc and public subnets with http port 80
+ better security is to have private subnets to deploy Fargate services into 
+ and have the publicly available load balancers allow the needed public traffic 
+ into these private subnets
 
 
 ## Questions
