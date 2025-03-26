@@ -4,6 +4,12 @@
 ![s3-upload-lambda](devops-challenge-part1.drawio.svg)
 
 ## Notes and Improvements
+ - At this point, have a ![Python script](./lambda_function.pylambda_function.py) 
+ running locally to populate dynamodb table.
+ - multi-tenancy handled via a S3 prefix path and providerId field in DynamoDB 
+ table
+
+---
  - In Steps 1 and 2, the application will know the providerId to help generate the initial s3 csv artifact file path
  - Step 3 will return the s3 signed url path to the user with Put 
  operation writes to overwrite the file in Step 4.
@@ -19,13 +25,9 @@
     /providerId/completed/
  - In Step 6, writing to DynamoDB should include the following logic:
     - record the csv filename so that there can be an audit record back to the original csv file 
-    - providerId as partition key with the sortKey containing the following 
-    format: medicalRecordNumber#dateTime
-        - this allows the optimized read access pattern of a doctor pulling up 
-        patient records in chronological order usign the query "begins with" call.
-        - this allows for performannt queries since a table scan is avoided
-        - still store the dateTime and medical Record number in dedicated fields 
-        for other query/reporting purposes
+    - idempotent record creation based on record existence check of user 
+    provided medical_record_number and date_time
+    
 
  ## S3 Notes
  - make sure public read access disabled
@@ -33,6 +35,13 @@
  - apply an appropriate life cycle property to comply with GDPR and HIPAA 
  
  ## DynamoDB Table Structure
+- providerId as partition key with the sortKey containing the following 
+    format: medicalRecordNumber#dateTime
+        - this allows the optimized read access pattern of a doctor pulling up 
+        patient records in chronological order usign the query "begins with" call.
+        - this allows for performannt queries since a table scan is avoided
+        - still store the dateTime and medical Record number in dedicated fields 
+        for other query/reporting purposes
 
 | providerId | sortKey | dateTime | doctorsNotes | dateTimeProcessed | csvFile | firstName | lastName | medicalRecordNumber |
 |------------|---------|----------|--------------|-------------------|---------|-----------|----------|---------------------|
