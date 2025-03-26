@@ -17,7 +17,15 @@
     - parse csv file and write to DynamoDB in Step 6
     - upon successful completion, "move/copy/rename" csv file to 
     /providerId/completed/
- - In Step 6, writing to DynamoDB should also record the csv file so that there can be an audit record back to the original csv file 
+ - In Step 6, writing to DynamoDB should include the following logic:
+    - record the csv filename so that there can be an audit record back to the original csv file 
+    - providerId as partition key with the sortKey containing the following 
+    format: medicalRecordNumber#dateTime
+        - this allows the optimized read access pattern of a doctor pulling up 
+        patient records in chronological order usign the query "begins with" call.
+        - this allows for performannt queries since a table scan is avoided
+        - still store the dateTime and medical Record number in dedicated fields 
+        for other query/reporting purposes
 
  ## S3 Notes
  - make sure public read access disabled
