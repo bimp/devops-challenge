@@ -1,4 +1,36 @@
 
-
+## Customer Patient Records CSV Uploading to DynamoDB Pipeline
 
 ![s3-upload-lambda](devops-challenge-part1.drawio.svg)
+
+## Notes and Improvements
+ - In Steps 1 and 2, the application will know the providerId to help generate the initial s3 csv artifact file path
+ - Step 3 will return the s3 signed url path to the user with Put 
+ operation writes to overwrite the file in Step 4.
+    - This auto generated file path will have a unique date,time,hash file name so that user can never overwrite a previously uploaded file
+    - Each provider/hospital will only ever have access to their own specific provider S3 prefix path
+    - this initial seeded file will be placed in the /providerId/uploaded/ path
+ - In Step 5, Lambda function will trigger and process the file. 
+ Processing the file may include any or all of the following depending on requirements:
+    - extract the providerId from the s3 prefix path to be used in writing to DynamoDB
+    - "move/copy/rename" csv upload to /providerId/processing/ path
+    - parse csv file and write to DynamoDB in Step 6
+    - upon successful completion, "move/copy/rename" csv file to 
+    /providerId/completed/
+ - In Step 6, writing to DynamoDB should also record the csv file so that there can be an audit record back to the original csv file 
+
+ ## S3 Notes
+ - make sure public read access disabled
+ - only allow secure https transport protocol
+ - apply an appropriate life cycle property to comply with GDPR and HIPAA 
+ 
+ ## DynamoDB Table Structure
+
+| providerId | sortKey | dateTime | doctorsNotes | dateTimeProcessed | csvFile | firstName | lastName | medicalRecordNumber |
+|------------|---------|----------|--------------|-------------------|---------|-----------|----------|---------------------|
+| PROV001 | 2025-03-26#12345 | 2025-03-26T10:30:00-07:00 | Patient reports mild fever | 2025-03-26T11:15:00-07:00 | records_20250326.csv | John | Doe | MRN123456 |
+| PROV002 | 2025-03-26#67890 | 2025-03-26T14:45:00-07:00 | Follow-up on previous treatment | 2025-03-26T15:30:00-07:00 | records_20250326.csv | Jane | Smith | MRN789012 |
+| PROV003 | 2025-03-26#24680 | 2025-03-26T09:15:00-07:00 | Annual check-up, all clear | 2025-03-26T10:00:00-07:00 | records_20250326.csv | Bob | Johnson | MRN345678 |
+
+
+
