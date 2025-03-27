@@ -3,6 +3,7 @@ import csv
 import os
 from io import TextIOWrapper, RawIOBase
 from botocore.exceptions import ClientError
+from datetime import datetime, timezone
 
 s3 = boto3.client('s3')
 dynamodb = boto3.resource('dynamodb')
@@ -47,9 +48,10 @@ def process_csv_files(bucket, prefix):
                 continue
                 
             provider_id = obj['Key'].split('/')[0]
-            process_single_file(bucket, obj['Key'], provider_id)
+            csv_filename = obj['Key'].split('/')[1]
+            process_single_file(bucket, obj['Key'], provider_id, csv_filename)
 
-def process_single_file(bucket, key, provider_id):
+def process_single_file(bucket, key, provider_id, csv_filename):
     """Process CSV with existence checks before batch writing"""
     try:
         response = s3.get_object(Bucket=bucket, Key=key)
@@ -58,6 +60,10 @@ def process_single_file(bucket, key, provider_id):
         
         with table.batch_writer() as batch:
             for row in csv.DictReader(text_stream):
+                if not is_valid_row(row):
+                    print(f"Skipping invalid row: {row}")
+                    continue
+                
                 sort_key = f"{row['medical_record_number']}#{row['date_time']}"
                 
                 # Skip existing records
@@ -67,6 +73,9 @@ def process_single_file(bucket, key, provider_id):
                     print(f"Skipping existing: {sort_key}")
                     continue
                 
+                # Get local time with offset
+                dateTimeProcessed = datetime.now().astimezone().isoformat()
+                
                 # Prepare new item
                 item = {
                     'providerId': provider_id,
@@ -75,7 +84,9 @@ def process_single_file(bucket, key, provider_id):
                     'firstName': row['first_name'],
                     'lastName': row['last_name'],
                     'dateTime': row['date_time'],
-                    'doctorsNotes': row['doctors_notes']
+                    'doctorsNotes': row['doctors_notes'],
+                    'dateTimeProcessed': dateTimeProcessed,
+                    'csvFile': csv_filename
                 }
                 
                 # Add to batch
@@ -85,27 +96,19 @@ def process_single_file(bucket, key, provider_id):
     except ClientError as e:
         print(f"S3 Error: {e}")
 
-def process_record(batch, row, provider_id):
-    """Process individual records with conditional writes"""
+def is_valid_row(row):
+    """
+    Validate if the row has a valid date_time in ISO 8601 format with timezone offset.
+    """
+    date_time = row.get('date_time')
+    if not date_time:
+        return False
     try:
-        sort_key = f"{row['medical_record_number']}#{row['date_time']}"
-        batch.put_item(
-            Item={
-                'providerId': provider_id,
-                'sortKey': sort_key,
-                'medicalRecordNumber': row['medical_record_number'],
-                'firstName': row['first_name'],
-                'lastName': row['last_name'],
-                'dateTime': row['date_time'],
-                'doctorsNotes': row['doctors_notes']
-            },
-            ConditionExpression='attribute_not_exists(sortKey)'
-        )
-    except ClientError as e:
-        if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
-            print(f"Duplicate skipped: {sort_key}")
-        else:
-            print(f"DynamoDB Error: {e}")
+        dt = datetime.fromisoformat(date_time)
+        # Ensure 'T' is present and timezone offset exists
+        return 'T' in date_time and (dt.tzinfo is not None)
+    except ValueError:
+        return False
 
 def lambda_handler(event, context):
     """Handle S3 trigger events"""
